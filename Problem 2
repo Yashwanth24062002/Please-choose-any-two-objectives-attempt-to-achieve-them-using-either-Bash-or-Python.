@@ -1,0 +1,32 @@
+import psutil
+import os
+import datetime
+
+# Thresholds
+CPU_THRESHOLD = 80  # percent
+MEMORY_THRESHOLD = 80  # percent
+DISK_THRESHOLD = 80  # percent
+
+def log_alert(message):
+    with open("system_health.log", "a") as log_file:
+        log_file.write(f"{datetime.datetime.now()} - {message}\n")
+
+def check_system_health():
+    # Check CPU usage
+    cpu_usage = psutil.cpu_percent(interval=1)
+    if cpu_usage > CPU_THRESHOLD:
+        log_alert(f"CPU usage is above threshold: {cpu_usage}%")
+
+    # Check Memory usage
+    memory = psutil.virtual_memory()
+    if memory.percent > MEMORY_THRESHOLD:
+        log_alert(f"Memory usage is above threshold: {memory.percent}%")
+
+    # Check Disk usage
+    disk = psutil.disk_usage('/')
+    if disk.percent > DISK_THRESHOLD:
+        log_alert(f"Disk usage is above threshold: {disk.percent}%")
+
+if __name__ == "__main__":
+    check_system_health()
+
